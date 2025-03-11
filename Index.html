@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feminine Vocal Pitch Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Feminine Vocal Pitch Analyzer</h1>
+            <p>Upload audio files to analyze and compare vocal pitch for feminine voice training</p>
+            <div class="dedication">For Yue <3</div>
+        </header>
+        
+        <div class="upload-section">
+            <div class="upload-container">
+                <h2>Audio File 1</h2>
+                <input type="file" id="audioFile1" accept="audio/*">
+                <div class="audio-player">
+                    <audio id="player1" controls></audio>
+                </div>
+            </div>
+            
+            <div class="upload-container">
+                <h2>Audio File 2 (Optional)</h2>
+                <input type="file" id="audioFile2" accept="audio/*">
+                <div class="audio-player">
+                    <audio id="player2" controls></audio>
+                </div>
+            </div>
+        </div>
+        
+        <div class="analyze-section">
+            <button id="analyzeBtn" disabled>Analyze Pitch</button>
+            <div id="progressContainer" class="progress-container hidden">
+                <div class="spinner"></div>
+                <div id="progressText">Analyzing audio...</div>
+                <div id="progressBar" class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="results-section">
+            <div class="stats">
+                <div id="stats1" class="stat-container">
+                    <h3>File 1 Statistics</h3>
+                    <p>Average Pitch: <span id="avgPitch1">-</span></p>
+                    <p>Minimum Pitch: <span id="minPitch1">-</span></p>
+                    <p>Maximum Pitch: <span id="maxPitch1">-</span></p>
+                </div>
+                <div id="stats2" class="stat-container">
+                    <h3>File 2 Statistics</h3>
+                    <p>Average Pitch: <span id="avgPitch2">-</span></p>
+                    <p>Minimum Pitch: <span id="minPitch2">-</span></p>
+                    <p>Maximum Pitch: <span id="maxPitch2">-</span></p>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="pitchChart"></canvas>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="color-box file1"></div>
+                    <span>File 1</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box file2"></div>
+                    <span>File 2</span>
+                </div>
+            </div>
+            
+            <div class="pitch-guide">
+                <h3>Pitch Range Guide</h3>
+                <div class="range-guide">
+                    <div class="range male">
+                        <span>Male Range (85-180 Hz)</span>
+                    </div>
+                    <div class="range androgynous">
+                        <span>Androgynous (145-175 Hz)</span>
+                    </div>
+                    <div class="range female">
+                        <span>Female Range (165-255 Hz)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Note: This tool is designed for voice training purposes. Pitch is just one aspect of voice feminization.</p>
+        </footer>
+    </div>
+
+    <!-- Load libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.0.0"></script>
+    <script src="script.js"></script>
+</body>
+</html>
