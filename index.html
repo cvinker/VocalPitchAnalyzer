@@ -5,6 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vocal Pitch Analyzer</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional styles for improved pitch guide */
+        .pitch-guide {
+            margin-top: 2rem;
+        }
+        
+        .range-guide {
+            position: relative;
+            height: 80px;
+            margin: 20px 0;
+            background: #f5f5f5;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .frequency-scale {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: #555;
+        }
+        
+        .range {
+            position: absolute;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+        
+        .male {
+            bottom: 10px;
+            left: 5%;
+            width: 45%;
+            background-color: rgba(0, 0, 255, 0.7);
+        }
+        
+        .androgynous {
+            top: 10px;
+            left: 35%;
+            width: 15%;
+            background-color: rgba(128, 0, 128, 0.7);
+        }
+        
+        .female {
+            top: 10px;
+            left: 40%;
+            width: 45%;
+            background-color: rgba(255, 0, 255, 0.7);
+        }
+        
+        .overlap-label {
+            position: absolute;
+            font-size: 11px;
+            color: #333;
+        }
+        
+        .hz-marker {
+            position: absolute;
+            bottom: -15px;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: #555;
+        }
+        
+        .hz-line {
+            position: absolute;
+            height: 80px;
+            width: 1px;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -76,7 +153,28 @@
             
             <div class="pitch-guide">
                 <h3>Pitch Range Guide</h3>
+                <div class="frequency-scale">
+                    <span>80 Hz</span>
+                    <span>260 Hz</span>
+                </div>
                 <div class="range-guide">
+                    <!-- Frequency markers -->
+                    <div class="hz-line" style="left: 5%;"></div>
+                    <div class="hz-marker" style="left: 5%;">85</div>
+                    
+                    <div class="hz-line" style="left: 34%;"></div>
+                    <div class="hz-marker" style="left: 34%;">145</div>
+                    
+                    <div class="hz-line" style="left: 42%;"></div>
+                    <div class="hz-marker" style="left: 42%;">165</div>
+                    
+                    <div class="hz-line" style="left: 50%;"></div>
+                    <div class="hz-marker" style="left: 50%;">175</div>
+                    
+                    <div class="hz-line" style="left: 85%;"></div>
+                    <div class="hz-marker" style="left: 85%;">255</div>
+                    
+                    <!-- Range bars -->
                     <div class="range male">
                         <span>Male Range (85-180 Hz)</span>
                     </div>
@@ -86,6 +184,14 @@
                     <div class="range female">
                         <span>Female Range (165-255 Hz)</span>
                     </div>
+                    
+                    <!-- Overlap indicators -->
+                    <div class="overlap-label" style="top: 45px; left: 38%;">Overlap</div>
+                </div>
+                
+                <div style="margin-top: 30px; font-size: 14px; color: #666;">
+                    <p><strong>Note:</strong> The androgynous range (145-175 Hz) represents the overlap where voices may be perceived as either gender depending on other vocal factors.</p>
+                    <p>There's also a small overlap (165-175 Hz) between all three ranges where pitch alone is insufficient to determine perceived gender.</p>
                 </div>
             </div>
         </div>
