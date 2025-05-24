@@ -2,11 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocal Pitch Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+    <meta name="description" content="Free vocal pitch analyzer for voice training. Compare your pitch to typical male, female, and androgynous ranges.">
+    <meta property="og:title" content="Vocal Pitch Analyzer">
+    <meta property="og:description" content="Analyze and compare vocal pitch for voice training">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#ff69b4">
+    <title>Vocal Pitch Analyzer - Voice Training Tool</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Additional styles for improved pitch guide */
+        /* Additional styles for improved pitch guide and new features */
         .pitch-guide {
             margin-top: 2rem;
         }
@@ -81,9 +86,219 @@
             width: 1px;
             background-color: rgba(0, 0, 0, 0.2);
         }
+        
+        /* New styles for improvements */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        
+        .error-message {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .help-section {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .help-section summary {
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0.5rem;
+        }
+        
+        .help-section ol {
+            margin-top: 1rem;
+            margin-left: 1.5rem;
+        }
+        
+        .file-format-hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .skeleton-loader {
+            display: none;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            height: 20px;
+            width: 100px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .stat-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .pitch-guide-notes {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+        }
+        
+        .pitch-guide-notes h4 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .pitch-guide-notes ul {
+            margin-left: 1.5rem;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .sample-files {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #e3f2fd;
+            border-radius: 8px;
+        }
+        
+        .sample-files h4 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sample-files a {
+            color: #1976d2;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+        
+        .sample-files a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #121212;
+                color: #e0e0e0;
+            }
+            
+            .container {
+                background-color: #1e1e1e;
+            }
+            
+            .range-guide {
+                background: #2a2a2a;
+            }
+            
+            .help-section, .pitch-guide-notes {
+                background: #2a2a2a;
+            }
+            
+            .file-format-hint {
+                color: #aaa;
+            }
+            
+            .hz-marker, .frequency-scale {
+                color: #ccc;
+            }
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .range span {
+                font-size: 11px;
+            }
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+        
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .container {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">🌓</button>
+    
     <div class="container">
         <header>
             <h1>Vocal Pitch Analyzer</h1>
@@ -91,113 +306,202 @@
             <div class="dedication">For Yue <3</div>
         </header>
         
-        <div class="upload-section">
-            <div class="upload-container">
-                <h2>Audio File 1</h2>
-                <input type="file" id="audioFile1" accept="audio/*">
-                <div class="audio-player">
-                    <audio id="player1" controls></audio>
+        <main role="main">
+            <details class="help-section">
+                <summary>How to use this tool</summary>
+                <ol>
+                    <li>Upload one or two audio recordings of speech/singing</li>
+                    <li>Click "Analyze Pitch" to process the audio</li>
+                    <li>Compare your pitch to typical ranges</li>
+                    <li>Use File 2 to track progress over time</li>
+                </ol>
+                <div class="sample-files">
+                    <h4>Sample Audio Files:</h4>
+                    <a href="#" onclick="loadSampleFile(1, 'male')">Load Male Sample</a>
+                    <a href="#" onclick="loadSampleFile(1, 'female')">Load Female Sample</a>
+                    <a href="#" onclick="loadSampleFile(1, 'androgynous')">Load Androgynous Sample</a>
                 </div>
-            </div>
+            </details>
             
-            <div class="upload-container">
-                <h2>Audio File 2 (Optional)</h2>
-                <input type="file" id="audioFile2" accept="audio/*">
-                <div class="audio-player">
-                    <audio id="player2" controls></audio>
-                </div>
-            </div>
-        </div>
-        
-        <div class="analyze-section">
-            <button id="analyzeBtn" disabled>Analyze Pitch</button>
-            <div id="progressContainer" class="progress-container hidden">
-                <div class="spinner"></div>
-                <div id="progressText">Analyzing audio...</div>
-                <div id="progressBar" class="progress-bar">
-                    <div id="progressFill" class="progress-fill"></div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="results-section">
-            <div class="stats">
-                <div id="stats1" class="stat-container">
-                    <h3>File 1 Statistics</h3>
-                    <p>Average Pitch: <span id="avgPitch1">-</span></p>
-                    <p>Minimum Pitch: <span id="minPitch1">-</span></p>
-                    <p>Maximum Pitch: <span id="maxPitch1">-</span></p>
-                </div>
-                <div id="stats2" class="stat-container">
-                    <h3>File 2 Statistics</h3>
-                    <p>Average Pitch: <span id="avgPitch2">-</span></p>
-                    <p>Minimum Pitch: <span id="minPitch2">-</span></p>
-                    <p>Maximum Pitch: <span id="maxPitch2">-</span></p>
-                </div>
-            </div>
-            
-            <div class="chart-container">
-                <canvas id="pitchChart"></canvas>
-            </div>
-            
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="color-box file1"></div>
-                    <span>File 1</span>
-                </div>
-                <div class="legend-item">
-                    <div class="color-box file2"></div>
-                    <span>File 2</span>
-                </div>
-            </div>
-            
-            <div class="pitch-guide">
-                <h3>Pitch Range Guide</h3>
-                <div class="frequency-scale">
-                    <span>80 Hz</span>
-                    <span>260 Hz</span>
-                </div>
-                <div class="range-guide">
-                    <!-- Frequency markers -->
-                    <div class="hz-line" style="left: 5%;"></div>
-                    <div class="hz-marker" style="left: 5%;">85</div>
-                    
-                    <div class="hz-line" style="left: 34%;"></div>
-                    <div class="hz-marker" style="left: 34%;">145</div>
-                    
-                    <div class="hz-line" style="left: 42%;"></div>
-                    <div class="hz-marker" style="left: 42%;">165</div>
-                    
-                    <div class="hz-line" style="left: 50%;"></div>
-                    <div class="hz-marker" style="left: 50%;">175</div>
-                    
-                    <div class="hz-line" style="left: 85%;"></div>
-                    <div class="hz-marker" style="left: 85%;">255</div>
-                    
-                    <!-- Range bars -->
-                    <div class="range male">
-                        <span>Male Range (85-180 Hz)</span>
+            <section class="upload-section" aria-label="Audio file upload">
+                <div class="upload-container">
+                    <h2 id="file1-heading">Audio File 1</h2>
+                    <input type="file" 
+                           id="audioFile1" 
+                           accept="audio/*"
+                           aria-labelledby="file1-heading"
+                           aria-describedby="file1-desc">
+                    <span id="file1-desc" class="sr-only">Upload your first audio file for pitch analysis</span>
+                    <div class="file-format-hint">
+                        Supported: MP3, WAV, M4A, OGG • Max recommended: 5 minutes
                     </div>
-                    <div class="range androgynous">
-                        <span>Androgynous (145-175 Hz)</span>
+                    <div id="error1" class="error-message" role="alert" aria-live="polite"></div>
+                    <div class="audio-player">
+                        <audio id="player1" controls></audio>
                     </div>
-                    <div class="range female">
-                        <span>Female Range (165-255 Hz)</span>
-                    </div>
-                    
-                    <!-- Overlap indicators -->
-                    <div class="overlap-label" style="top: 45px; left: 38%;">Overlap</div>
                 </div>
                 
-                <div style="margin-top: 30px; font-size: 14px; color: #666;">
-                    <p><strong>Note:</strong> The androgynous range (145-175 Hz) represents the overlap where voices may be perceived as either gender depending on other vocal factors.</p>
-                    <p>There's also a small overlap (165-175 Hz) between all three ranges where pitch alone is insufficient to determine perceived gender.</p>
+                <div class="upload-container">
+                    <h2 id="file2-heading">Audio File 2 (Optional)</h2>
+                    <input type="file" 
+                           id="audioFile2" 
+                           accept="audio/*"
+                           aria-labelledby="file2-heading"
+                           aria-describedby="file2-desc">
+                    <span id="file2-desc" class="sr-only">Upload your second audio file for comparison</span>
+                    <div class="file-format-hint">
+                        Supported: MP3, WAV, M4A, OGG • Max recommended: 5 minutes
+                    </div>
+                    <div id="error2" class="error-message" role="alert" aria-live="polite"></div>
+                    <div class="audio-player">
+                        <audio id="player2" controls></audio>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </section>
+            
+            <section class="analyze-section" aria-label="Analysis controls">
+                <div class="button-group">
+                    <button id="analyzeBtn" 
+                            disabled 
+                            aria-describedby="analyze-desc">
+                        Analyze Pitch
+                    </button>
+                    <span id="analyze-desc" class="sr-only">
+                        Processes uploaded audio files to extract and compare pitch data
+                    </span>
+                    
+                    <button id="clearBtn" 
+                            onclick="clearAnalysis()"
+                            aria-label="Clear analysis and reset">
+                        Clear Results
+                    </button>
+                    
+                    <button id="shareBtn" 
+                            onclick="shareResults()"
+                            aria-label="Share or export results"
+                            style="display: none;">
+                        Share Results
+                    </button>
+                </div>
+                
+                <div id="progressContainer" class="progress-container hidden">
+                    <div class="spinner"></div>
+                    <div id="progressText">Analyzing audio...</div>
+                    <div id="progressBar" class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="results-section" aria-label="Analysis results">
+                <div class="stats stats-grid">
+                    <div id="stats1" class="stat-container">
+                        <h3>File 1 Statistics</h3>
+                        <div class="stat-row">
+                            <p>Average Pitch: <span id="avgPitch1" class="stat-value">-</span></p>
+                        </div>
+                        <div class="stat-row">
+                            <p>Minimum Pitch: <span id="minPitch1" class="stat-value">-</span></p>
+                        </div>
+                        <div class="stat-row">
+                            <p>Maximum Pitch: <span id="maxPitch1" class="stat-value">-</span></p>
+                        </div>
+                    </div>
+                    <div id="stats2" class="stat-container">
+                        <h3>File 2 Statistics</h3>
+                        <div class="stat-row">
+                            <p>Average Pitch: <span id="avgPitch2" class="stat-value">-</span></p>
+                        </div>
+                        <div class="stat-row">
+                            <p>Minimum Pitch: <span id="minPitch2" class="stat-value">-</span></p>
+                        </div>
+                        <div class="stat-row">
+                            <p>Maximum Pitch: <span id="maxPitch2" class="stat-value">-</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <figure class="chart-container">
+                    <canvas id="pitchChart" role="img" aria-label="Pitch analysis chart"></canvas>
+                    <figcaption class="sr-only">Chart showing pitch over time for uploaded audio files</figcaption>
+                </figure>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="color-box file1"></div>
+                        <span>File 1</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box file2"></div>
+                        <span>File 2</span>
+                    </div>
+                </div>
+                
+                <div class="pitch-guide">
+                    <h3>Pitch Range Guide</h3>
+                    <div class="frequency-scale">
+                        <span>80 <span class="tooltip">Hz<span class="tooltiptext">Hertz (Hz) measures frequency - how many sound waves per second</span></span></span>
+                        <span>260 <span class="tooltip">Hz<span class="tooltiptext">Higher Hz = higher pitch</span></span></span>
+                    </div>
+                    <div class="range-guide">
+                        <!-- Frequency markers -->
+                        <div class="hz-line" style="left: 5%;"></div>
+                        <div class="hz-marker" style="left: 5%;">85</div>
+                        
+                        <div class="hz-line" style="left: 34%;"></div>
+                        <div class="hz-marker" style="left: 34%;">145</div>
+                        
+                        <div class="hz-line" style="left: 42%;"></div>
+                        <div class="hz-marker" style="left: 42%;">165</div>
+                        
+                        <div class="hz-line" style="left: 50%;"></div>
+                        <div class="hz-marker" style="left: 50%;">175</div>
+                        
+                        <div class="hz-line" style="left: 85%;"></div>
+                        <div class="hz-marker" style="left: 85%;">255</div>
+                        
+                        <!-- Range bars -->
+                        <div class="range male">
+                            <span>Male Range (85-180 Hz)</span>
+                        </div>
+                        <div class="range androgynous">
+                            <span>Androgynous (145-175 Hz)</span>
+                        </div>
+                        <div class="range female">
+                            <span>Female Range (165-255 Hz)</span>
+                        </div>
+                        
+                        <!-- Overlap indicators -->
+                        <div class="overlap-label" style="top: 45px; left: 38%;">Overlap</div>
+                    </div>
+                    
+                    <div style="margin-top: 30px; font-size: 14px; color: #666;">
+                        <p><strong>Note:</strong> The androgynous range (145-175 Hz) represents the overlap where voices may be perceived as either gender depending on other vocal factors.</p>
+                        <p>There's also a small overlap (165-175 Hz) between all three ranges where 
+                            <span class="tooltip">pitch<span class="tooltiptext">The perceived frequency of your voice - how high or low it sounds</span></span> 
+                            alone is insufficient to determine perceived gender.</p>
+                    </div>
+                    
+                    <div class="pitch-guide-notes">
+                        <h4>Understanding Your Results:</h4>
+                        <ul>
+                            <li><strong>Consistent pitch:</strong> More important than hitting exact frequencies</li>
+                            <li><strong>Natural variation:</strong> ±10-20 Hz variation is normal during speech</li>
+                            <li><strong>Context matters:</strong> 
+                                <span class="tooltip">Intonation<span class="tooltiptext">The rise and fall of your voice when speaking - your speech melody</span></span> 
+                                and 
+                                <span class="tooltip">resonance<span class="tooltiptext">Where your voice vibrates in your throat, mouth, and chest</span></span> 
+                                also affect perception</li>
+                            <li><strong>Practice tip:</strong> Record yourself reading the same passage weekly to track progress</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
         
         <footer>
-            <p>Note: This tool is designed for voice training purposes. Pitch is just one aspect of voice feminization.</p>
+            <p>Note: This tool is designed for voice training purposes. Pitch is just one aspect of voice feminization. 
+                Consider working with a speech therapist for comprehensive voice training.</p>
         </footer>
     </div>
 
@@ -205,5 +509,79 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.0.0"></script>
     <script src="script.js"></script>
+    
+    <!-- Additional scripts for new features -->
+    <script>
+        // Dark mode toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+        
+        // Load dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+        
+        // Clear analysis
+        function clearAnalysis() {
+            // Clear file inputs
+            document.getElementById('audioFile1').value = '';
+            document.getElementById('audioFile2').value = '';
+            
+            // Clear audio players
+            document.getElementById('player1').src = '';
+            document.getElementById('player2').src = '';
+            
+            // Reset stats
+            document.getElementById('avgPitch1').textContent = '-';
+            document.getElementById('minPitch1').textContent = '-';
+            document.getElementById('maxPitch1').textContent = '-';
+            document.getElementById('avgPitch2').textContent = '-';
+            document.getElementById('minPitch2').textContent = '-';
+            document.getElementById('maxPitch2').textContent = '-';
+            
+            // Clear chart
+            const canvas = document.getElementById('pitchChart');
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Hide share button
+            document.getElementById('shareBtn').style.display = 'none';
+            
+            // Disable analyze button
+            document.getElementById('analyzeBtn').disabled = true;
+            
+            // Trigger event for script.js to handle
+            document.dispatchEvent(new Event('clearAnalysis'));
+        }
+        
+        // Share results (basic implementation)
+        function shareResults() {
+            const canvas = document.getElementById('pitchChart');
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'pitch-analysis-' + new Date().toISOString().slice(0, 10) + '.png';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+        
+        // Load sample files (placeholder - would need actual implementation)
+        function loadSampleFile(fileNumber, type) {
+            alert(`Sample ${type} voice file would be loaded here. This feature requires server-side implementation.`);
+            // In a real implementation, you would:
+            // 1. Fetch a sample audio file from your server
+            // 2. Create a File object from the fetched data
+            // 3. Trigger the file input change event
+        }
+        
+        // Show share button when analysis is complete
+        document.addEventListener('analysisComplete', function() {
+            document.getElementById('shareBtn').style.display = 'inline-block';
+        });
+    </script>
 </body>
 </html>
